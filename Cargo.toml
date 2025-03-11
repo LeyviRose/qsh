@@ -1,0 +1,13 @@
+[package]
+name = "qsh"
+version = "0.1.0"
+edition = "2024"
+authors = ["Leyvi Rose <leyvirose@gmail.com>"]
+
+[lib]
+name = "libqsh"
+path = "src/lib/lib.rs"
+
+[dependencies]
+lz4_flex = { version = "0.11.3", default-features = false }
+thiserror = { version = "2.0.12", default-features = false }

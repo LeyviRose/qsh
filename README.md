@@ -5,6 +5,8 @@ Welcome to the repository for QSH! QSH is a program for remotely accessing a ter
 * To make a modular and customizable program.
 * To make something stable and consistent enough to use in a production environment.
 ---
+## Why I'm making this at all:
+This is just a high-school end-of-year project, but I also wanted to make something more extensible than the default OpenSSH.
 ## How It's Going to Work:
 I'm not going to re-invent the wheel here, so I'm just going to stick with the basic outline of the SSH protocol, though this won't at all be compatible:
 ### Layers (lowest to highest):
@@ -32,4 +34,3 @@ When the server gets a connection request, it will start the process of begining
 
 ---
 # NOTE THAT THIS IS ALL SUBJECT TO CHANGE!
----
