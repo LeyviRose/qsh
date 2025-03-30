@@ -1,22 +1,19 @@
-// Package `use`s go here:
-use thiserror::Error;
-
-// Modules go here:
-pub(self) mod qsh_lz4_flex;
+// Module declarations go here:
+#[cfg(feature = "lz4_flex")]
+mod qsh_lz4_flex;
 
 // Re-export them here:
-pub use self::qsh_lz4_flex::Lz4FlexCompressor;
+#[cfg(feature = "lz4_flex")]
+pub use qsh_lz4_flex::Lz4FlexCompressor;
 
-trait Compressor {
+pub trait Compressor {
+	type Error;
+
+	fn new() -> Self;
+
+	/// Compress `payload`.
 	fn compress(&self, payload: &[u8]) -> Vec<u8>;
-	fn decompress(&self, payload: &[u8]) -> Result<Vec<u8>, QshDecompressError>;
-}
 
-#[derive(Error, Debug)]
-pub enum QshDecompressError {
-	#[error("Failed to decompress with lz4_flex: {0}")]
-	Lz4FlexError(lz4_flex::block::DecompressError)
+	/// Decompress `payload`.
+	fn decompress(&self, payload: &[u8]) -> Result<Vec<u8>, Self::Error>;
 }
-
-#[cfg(test)]
-mod tests;
