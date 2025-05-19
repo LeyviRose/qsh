@@ -9,14 +9,18 @@ name = "qshd"
 path = "src/qshd/main.rs"
 
 [dependencies]
+aes-gcm = { version = "0.10.3", features = ["zeroize"], optional = true }
 bincode = { version = "2.0.1", features = ["std", "derive", "alloc", "bincode_derive", "serde"] }
 bitflags = { version = "2.9.0", features = ["core", "serde"] }
 config = { version = "0.15.9", default-features = false, features = ["toml"] }
 kyberlib = { version = "0.0.6", features = ["nasm-rs"], optional = true }
 lz4_flex = { version = "0.11.3", default-features = false, optional = true }
-rand = { version = "0.9.1", features = ["std", "std_rng"] }
-rand_chacha = { version = "0.9.0", features = ["os_rng"] }
+rand = { version = "0.8.5", features = ["std", "std_rng"] }
+rand_chacha = { version = "0.3.1" }
 thiserror = { version = "2.0.12", default-features = false }
 
 [features]
-default = ["lz4_flex", "kyberlib"]
+default = ["lz4_flex", "kyberlib", "aes-gcm"]
+lz4_flex = ["dep:lz4_flex"]
+kyberlib = ["dep:kyberlib"]
+aes-gcm = ["dep:aes-gcm"]

@@ -5,7 +5,7 @@
 	1. Control, which handles key exchange, as well as managing the state of the connection (opening, closing).
 	2. Data, which moves a packet from a higher level in an encrypted manner.
 */
-
+/*
 use bincode::{Decode, Encode};
 
 pub mod control;
@@ -18,4 +18,4 @@ use data::Data;
 pub enum Transport {
 	Control(Control),
 	Data(Data),
-}
+}*/

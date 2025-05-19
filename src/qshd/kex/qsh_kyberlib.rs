@@ -34,9 +34,10 @@ impl KeyExchanger for KyberlibKeyExchanger {
 	type Error = KyberLibError;
 	type ClientInit = AkeSendInit;
 	type ServerInit = AkeSendResponse;
+	type PublicKey = PublicKey;
 
 	fn new() -> Result<Self, Self::Error> {
-		let mut random: ChaCha20Rng = ChaCha20Rng::from_os_rng();
+		let mut random: ChaCha20Rng = ChaCha20Rng::from_entropy();
 		let state: Ake = Ake::new();
 		let keypair: Keypair = keypair(&mut random)?;
 
@@ -48,11 +49,11 @@ impl KeyExchanger for KyberlibKeyExchanger {
 		});
 	}
 	
-	fn get_local_pubkey(&self) -> &[u8] {
-		return &self.keypair.public;
+	fn get_local_pubkey(&self) -> Self::PublicKey {
+		return self.keypair.public;
 	}
 
-	fn set_remote_pubkey(&mut self, pubkey: &[u8]) -> Result<(), TryFromSliceError> {
+	fn set_remote_pubkey(&mut self, pubkey: Self::PublicKey) -> Result<(), TryFromSliceError> {
 		self.remote_pubkey = Some(PublicKey::from(pubkey.try_into()?));
 		return Ok(());
 	}
