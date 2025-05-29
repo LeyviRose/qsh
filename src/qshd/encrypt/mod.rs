@@ -12,10 +12,10 @@ pub trait Crypto {
 	type Error;
 
 
-	fn new<T: KeyExchanger>(key_exchange: T) -> Self;
+	fn new<T: KeyExchanger>(key_exchange_i: T, key_exchange_o: T) -> Self;
 
-	fn encrypt(&mut self, data: &mut Vec<u8>, adata: &[u8], nonce: &[u8]) -> Result<(), Self::Error>;
+	fn encrypt(&mut self, data: &mut Vec<u8>, adata: &[u8]) -> Result<(), Self::Error>;
 
-	fn decrypt(&mut self, data: &mut Vec<u8>, adata: &[u8], nonce: &[u8]) -> Result<(), Self::Error>;
+	fn decrypt(&mut self, data: &mut Vec<u8>, adata: &[u8]) -> Result<(), Self::Error>;
 
 }
