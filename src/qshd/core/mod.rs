@@ -1,3 +1,3 @@
-mod configuration;
+mod control;
 mod state;
 mod packets;

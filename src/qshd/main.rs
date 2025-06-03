@@ -1,8 +1,7 @@
 pub mod core;
 pub mod compress;
-pub mod encrypt;
+pub mod crypto;
 pub mod authenticate;
-pub mod key_storage;
 pub mod kex;
 
 fn main() {}
