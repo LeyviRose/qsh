@@ -29,13 +29,17 @@ pub struct SessionRequest {
 	// Who to connect to:
 	remote_host: Ipv6Addr,
 
+	// Port:
+	port: u16,
+
 	// What to run on the other end:
 	execute: PathBuf,
 
 } impl SessionRequest {
-	pub fn new<T: Into<Ipv6Addr>, U: Into<PathBuf>>(remote_host: T, execute: U) -> Self {
+	pub fn new<T: Into<Ipv6Addr>, U: Into<PathBuf>>(remote_host: T, port:u16, execute: U) -> Self {
 		return Self {
 			remote_host: remote_host.into(),
+			port: port,
 			execute: execute.into(),
 		};
 	}

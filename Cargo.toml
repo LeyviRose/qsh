@@ -13,6 +13,10 @@ path = "src/qshd/main.rs"
 name = "qsh"
 path = "src/qsh/main.rs"
 
+[[bin]]
+name = "qsh-keygen"
+path = "src/qsh-keygen/main.rs"
+
 [lib]
 name = "qsh_ipc"
 path = "src/qsh_ipc/lib.rs"
@@ -23,6 +27,7 @@ arbitrary-int = "1.3.0"
 bincode = { version = "2.0.1", features = ["std", "derive", "alloc", "bincode_derive", "serde"] }
 bitflags = { version = "2.9.0", features = ["core", "serde"] }
 clap = { version = "4.5.39", features = ["derive"] }
+fips204 = { version = "0.4.6", default-features = false, features = ["ml-dsa-87"], optional = true }
 kyberlib = { version = "0.0.6", features = ["nasm-rs"], optional = true }
 lz4_flex = { version = "0.11.3", default-features = false, optional = true }
 rand = { version = "0.8.5", features = ["std", "std_rng"] }
@@ -34,9 +39,11 @@ thiserror = { version = "2.0.12", default-features = false }
 tokio = { version = "1.45.1", features = ["full"] }
 toml = "0.8.22"
 uuid = { version = "1.17.0", features = ["v4"] }
+zeroize = { version = "1.8.1", features = ["derive", "simd"] }
 
 [features]
-default = ["lz4_flex", "kyberlib", "aes-gcm"]
+default = ["lz4_flex", "kyberlib", "aes-gcm", "fips204"]
 lz4_flex = ["dep:lz4_flex"]
 kyberlib = ["dep:kyberlib"]
 aes-gcm = ["dep:aes-gcm"]
+fips204 = ["dep:fips204"]

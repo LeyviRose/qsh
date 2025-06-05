@@ -74,7 +74,7 @@ pub struct Daemon {
 
 
 impl Daemon {
-	pub async fn new(path: PathBuf, host: Ipv6Addr, executable: PathBuf) -> Result<Self> {
+	pub async fn new(path: PathBuf, host: Ipv6Addr, port: u16, executable: PathBuf) -> Result<Self> {
 		//! `path`: path to the socket in XDG_RUNTIME_DIR that manages the daemon.
 		//! `host`: IPv6 address of the remote host.
 		
@@ -82,7 +82,7 @@ impl Daemon {
 		let mut socket: UnixStream = UnixStream::connect(path).await?;
 
 		// Send a session request:
-		socket.write_all(bincode::encode_to_vec(SessionRequest::new(host, &executable), IPC_BINCODE_CONFIG).unwrap().as_slice()).await?;
+		socket.write_all(bincode::encode_to_vec(SessionRequest::new(host, port, &executable), IPC_BINCODE_CONFIG).unwrap().as_slice()).await?;
 
 		// Make new session struct:
 		socket.readable().await?;	// Wait for the socket to become readable.

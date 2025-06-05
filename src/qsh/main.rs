@@ -21,5 +21,5 @@ async fn main() {
 	socketpath.push("/qshd.socket");	// We're calling the socket "qshd.socket".
 
 	// Connect:
-	let service: Daemon = Daemon::new(socketpath, arguments.host, arguments.executable.into()).await.expect("failed to connect to qshd");
+	let service: Daemon = Daemon::new(socketpath, arguments.host, arguments.port, arguments.executable.into()).await.expect("failed to connect to qshd");
 }

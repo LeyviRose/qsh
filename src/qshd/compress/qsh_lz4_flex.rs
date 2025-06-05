@@ -1,6 +1,5 @@
 /*!
-	Implements the default compression scheme, lz4_flex (LZ4).
-	Compression option 0 in the protocol.
+	Implements the default compression method, lz4_flex (LZ4).
 */
 
 // External dependancies go here:

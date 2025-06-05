@@ -7,7 +7,10 @@
 	have to wait.
 */
 
-const CONFIG_PATH: &str = "~/.qsh/qsh.toml";
+use std::{
+	net::Ipv6Addr,
+	env,
+};
 
 use serde::{
 	Deserialize,
@@ -52,19 +55,37 @@ pub(crate) struct QshConfiguration {
 pub(crate) struct General {
 
 	// Do we log?
+	#[serde(default)]
 	log: bool,
 
 	// How frequently to check the configuration file, in seconds.
+	#[serde(default = "default_update_interval")]
 	config_update_interval: u64,
+
+	#[serde(default = "default_listen_address")]
+	listen_address: Ipv6Addr,
+
+	#[serde(default = "default_listen_port")]
+	listen_port: u16,
+
 }
 
 /// Methods (from `super`) for various things.
 #[derive(Debug, Copy, Clone, Deserialize)]
 pub(crate) struct Methods {
+
+	#[serde(default = "default_authentication_method")]
 	authentication: AuthenticationMethod,
+
+	#[serde(default = "default_compression_method")]
 	compression: CompressionMethod,
+
+	#[serde(default = "default_cryptography_method")]
 	crypto: CryptographyMethod,
+
+	#[serde(default = "default_key_exchange_method")]
 	key_exchange: KeyExchangeMethod,
+
 }
 
 // Authentication:
@@ -93,8 +114,12 @@ enum KeyExchangeMethod {
 impl QshConfiguration {
 	pub async fn new() -> Self {
 		
+		// Locate home directory, and append the correct path:
+		let mut config_path: String = env::var("HOME").unwrap();
+		config_path.push_str("/.qsh/qsh.toml");
+
 		// Open the configuration file:
-		let mut file: File = File::open(CONFIG_PATH).await.unwrap();
+		let mut file: File = File::open(config_path).await.unwrap();
 
 		// Read it:
 		let mut contents: String = String::new();
@@ -103,4 +128,26 @@ impl QshConfiguration {
 		// Parse it:
 		return toml::from_str(&contents).unwrap();
 	}
+}
+
+
+// Defaults:
+fn default_update_interval() -> u64 {
+	return 30;
+}
+fn default_authentication_method() -> AuthenticationMethod { todo!() }
+fn default_compression_method() -> CompressionMethod {
+	return CompressionMethod::Lz4Flex;
+}
+fn default_cryptography_method() -> CryptographyMethod {
+	return CryptographyMethod::AesGcm;
+}
+fn default_key_exchange_method() -> KeyExchangeMethod {
+	return KeyExchangeMethod::Kyberlib;
+}
+fn default_listen_address() -> Ipv6Addr {
+	return Ipv6Addr::LOCALHOST;
+}
+fn default_listen_port() -> u16 {
+	return 54321;
 }
