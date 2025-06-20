@@ -1,7 +1,8 @@
 pub mod core;
-pub mod compress;
+pub mod channel;
 pub mod crypto;
-pub mod authenticate;
+pub mod session;
 pub mod kex;
+pub mod connection;
 
 fn main() {}

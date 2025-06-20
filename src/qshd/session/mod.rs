@@ -10,9 +10,10 @@ mod qsh_fips204;
 #[cfg(feature = "fips204")]
 pub use qsh_fips204::Fips204Authenticator;
 
-trait Authenticator {
+trait Session {
 	type Error;
 	type Signature;
+
 
 
 	async fn new() -> Self;

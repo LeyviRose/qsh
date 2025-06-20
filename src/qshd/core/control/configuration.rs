@@ -38,8 +38,8 @@ use tokio::{
 
 // New features go here:
 use crate::{
-	authenticate::*,
-	compress::*,
+	session::*,
+	channel::*,
 	crypto::*,
 	kex::*,
 };
@@ -62,10 +62,10 @@ pub(crate) struct General {
 	#[serde(default = "default_update_interval")]
 	config_update_interval: u64,
 
-	#[serde(default = "default_listen_address")]
+	//#[serde(default = "default_listen_address")]
 	listen_address: Ipv6Addr,
 
-	#[serde(default = "default_listen_port")]
+	//#[serde(default = "default_listen_port")]
 	listen_port: u16,
 
 }
@@ -144,10 +144,4 @@ fn default_cryptography_method() -> CryptographyMethod {
 }
 fn default_key_exchange_method() -> KeyExchangeMethod {
 	return KeyExchangeMethod::Kyberlib;
-}
-fn default_listen_address() -> Ipv6Addr {
-	return Ipv6Addr::LOCALHOST;
-}
-fn default_listen_port() -> u16 {
-	return 54321;
 }

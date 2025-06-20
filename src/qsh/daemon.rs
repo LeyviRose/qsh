@@ -22,7 +22,7 @@ use tokio::{
 	},
 };
 
-use qsh_ipc::*;
+use qsh_common_types::ipc::*;
 
 /// A channel; one data stream.
 struct Channel {

@@ -18,7 +18,7 @@ use rand_chacha::{
 };
 use zeroize::Zeroizing;
 use std::{
-	env, fs::{read, set_permissions, write, File, Permissions}, io::{Read, Seek, Write, SeekFrom}, net::Ipv6Addr, os::unix::fs::{OpenOptionsExt, PermissionsExt}, path::{
+	env, fs::{read, set_permissions, write, File, Permissions, OpenOptions}, io::{Read, Seek, Write, SeekFrom}, net::Ipv6Addr, os::unix::fs::{OpenOptionsExt, PermissionsExt}, path::{
 		Path,
 		PathBuf,
 	}
@@ -58,8 +58,6 @@ enum Operation {
 		name: String,
 
 		path: String,
-
-		host: Ipv6Addr,
 
 	},
 
@@ -108,8 +106,8 @@ fn main() {
 		Operation::New {key_type} => {
 			new(key_type, qsh_directory.clone());
 		},
-		Operation::Add {key_type, name, path, host} => {
-			add(key_type, qsh_directory.join("certs").join(name), &PathBuf::from(path), &host);
+		Operation::Add {key_type, name, path} => {
+			add(key_type, qsh_directory.join("certs"), &PathBuf::from(path), &name);
 		},
 		Operation::Del {name} => todo!(),
 		Operation::Rem {name} => todo!(),
@@ -138,11 +136,17 @@ fn new(key_type: KeyType, mut qsh_dir: PathBuf) {
 	}
 
 	// Set the right file permissions:
-	set_permissions(&qsh_dir, Permissions::from_mode(0o400)).unwrap();
+	set_permissions(&qsh_dir, Permissions::from_mode(0o600)).unwrap();
 }
 
 /// Adds a remote public key to the key collection.
-fn add(key_type: KeyType, write_path: PathBuf, read_path: &Path, host: &Ipv6Addr) {
+fn add(key_type: KeyType, write_path: PathBuf, read_path: &Path, name: &str) {
+	
+	// Assert that the permissions are correct:
+	if !write_path.metadata().unwrap().permissions().mode() & 0o177 != 0 {
+		panic!("incorrect permissions on certs directory");
+	}
+	
 	match key_type {
 		KeyType::Fips204 => {
 
@@ -153,8 +157,7 @@ fn add(key_type: KeyType, write_path: PathBuf, read_path: &Path, host: &Ipv6Addr
 
 			if let Ok(_) = PublicKey::try_from_bytes(new_key) {
 				// If valid:
-				let mut o_file: File = File::create(&write_path).unwrap();
-				o_file.write_all(&host.octets()).unwrap();
+				let mut o_file: File = File::create(write_path.join("fips204").join(name)).unwrap();
 				o_file.write_all(&new_key).unwrap();
 			} else {
 				// Trying to add an invalid key:
@@ -164,7 +167,7 @@ fn add(key_type: KeyType, write_path: PathBuf, read_path: &Path, host: &Ipv6Addr
 	}
 
 	// Set file permissions:
-	set_permissions(&write_path, Permissions::from_mode(0o400)).unwrap();
+	set_permissions(&write_path, Permissions::from_mode(0o600)).unwrap();
 }
 
 /// Deletes a keypair.

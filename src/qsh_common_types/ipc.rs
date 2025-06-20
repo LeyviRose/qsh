@@ -1,3 +1,6 @@
+/*!
+	Stuff for IPC between `qsh` and `qshd`.
+*/
 use std::{
 	path::PathBuf,
 	net::Ipv6Addr,
