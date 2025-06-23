@@ -75,6 +75,7 @@ pub trait KeyExchanger {
 pub enum Implementation {
 	Kyberlib,
 } impl Implementation {
+	/// Generates a key exchanger dynamically from the configuration `struct`.
 	pub fn generate(&self) -> impl KeyExchanger + use<> {
 		return match self {
 			Self::Kyberlib => KyberlibKeyExchanger::new().expect("failed to generate new keypair"),

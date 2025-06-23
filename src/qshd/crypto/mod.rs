@@ -41,6 +41,7 @@ pub trait Decryptor {
 pub enum Implementation {
 	AesGcm,
 } impl Implementation {
+	/// Generates a `Encryptor`-`Decryptor` pair dynamically from the configuration `struct`.
 	pub fn generate<T: KeyExchanger>(&self, i: T, o: T) -> (impl Encryptor + use<T>, impl Decryptor + use<T>) {
 		return match self {
 			Self::AesGcm => (AesGcmEncryptor::new(o), AesGcmDecryptor::new(i)),

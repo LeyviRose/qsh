@@ -101,7 +101,7 @@ pub struct TcpConnection {
 			eprintln!("an error occured on a sender task connected to {}: {}", tx.get_ref().peer_addr().unwrap(), e);
 		} else {
 			// This gets run if all is dandy:
-			eprintln!("closed sender task connected to {}", tx.get_ref().peer_addr().unwrap());
+			eprintln!("Closed sender task connected to {}", tx.get_ref().peer_addr().unwrap());
 		}
 		return;
 	}
@@ -162,6 +162,7 @@ impl Connection for TcpConnection {
 		sock.set_reuseport(true)?;	// So that all connections can use the same port.
 		sock.bind((self.config.addr, self.config.port).into())?;	// Actually bind it.
 		self.listener = Some(sock.listen(1)?);
+		eprintln!("Server listening on [{}]:{}.", self.config.addr, self.config.port);
 		return Ok(());
 	}
 
@@ -172,7 +173,7 @@ impl Connection for TcpConnection {
 
 			// If we are, accept one connection:
 			let (stream, address) = listener.accept().await?;
-			eprintln!("New connection from {}.", &address);
+			eprintln!("Server: new connection from {}.", &address);
 
 			// And split the stream into a sender and a receiver:
 			let (rx_u, tx_u) = stream.into_split();
@@ -277,7 +278,7 @@ async fn test_tcp_connection() {
 		}
 		return;
 	});
-	tokio::time::sleep(std::time::Duration::from_secs(5)).await;	// So that the server has time to start.
+	tokio::time::sleep(std::time::Duration::from_secs(1)).await;	// So that the server has time to start.
 
 	// Runs a client:
 	let (ctx, mut crx) = client.connect(Ipv6Addr::LOCALHOST, 54321).await.unwrap();
